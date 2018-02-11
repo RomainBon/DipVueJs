@@ -1,41 +1,39 @@
 import Vue from 'vue';
 import Vuex from 'vuex'
+import api from '../api';
 
 Vue.use(Vuex);
 
-export default new Vuex.Store
-({
-    state:
-    {
-        todos:[]
+export default new Vuex.Store ({
+	state: {
+		todos:[{
+			id: 1,
+			label: 'ce que je veux'
+		}],
+	},
+	getters: {
+		count(state) {
+			return state.todos.length;
+		},
+		todos(state){
+			return state.todos;
+		}
 
-    },
-    getters:
-    {
-      count(state)
-      {
-        return state.todos.lenght;
-      },
-      count(state)
-      {
-        return state.todos;
-      }
-    },
-    mutations:
-    {
-      POPULATE_TODO(state , todos)
-      {
-        state.todos =todos;
-      }
-    },
-    action:
-    {
-      getTodos()
-      {
-        api.get('/todos')
-          .then((responce) => {
-            context.commit('POPULATE_TODO',responce.data);
-          }).catch((e) => { this.error.push(e); });
-      }
-    }
-  })
+	},
+	mutations: {
+		POPULATE_TODOS(state, todos){
+			state.todos = todos;
+		}
+	},
+	actions: {
+		getTodos(context){
+			api.get(`/todos`)
+		      .then((response) => {
+		      	context.commit('POPULATE_TODOS', response.data);
+		      })
+		      .catch((e) => {
+		        this.errors.push(e);
+		      });
+			}
+		},
+});
